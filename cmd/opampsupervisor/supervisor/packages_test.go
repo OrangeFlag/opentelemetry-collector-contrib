@@ -46,7 +46,7 @@ func TestNewPackageManager(t *testing.T) {
 		require.NoError(t, os.MkdirAll(storageDir, 0o700))
 		require.NoError(t, os.WriteFile(agentFile, []byte(testAgentFileContents), 0o600))
 
-		pm, err := newPackageManager(agentFile, storageDir, "v0.110.0", &persistentState{}, nil, sigVerifier)
+		pm, err := newPackageManager(agentFile, storageDir, "v0.110.0", defaultAgentExePathInArchieve, &persistentState{}, nil, sigVerifier)
 		require.NoError(t, err)
 
 		assert.Equal(t, "v0.110.0", pm.topLevelVersion)
@@ -60,7 +60,7 @@ func TestNewPackageManager(t *testing.T) {
 
 		require.NoError(t, os.MkdirAll(storageDir, 0o700))
 
-		_, err := newPackageManager(agentFile, storageDir, "v0.110.0", &persistentState{}, nil, sigVerifier)
+		_, err := newPackageManager(agentFile, storageDir, "v0.110.0", defaultAgentExePathInArchieve, &persistentState{}, nil, sigVerifier)
 		require.ErrorContains(t, err, "open agent:")
 	})
 }
@@ -291,7 +291,7 @@ func initPackageManager(t *testing.T, tmpDir string) *packageManager {
 	ps, err := loadOrCreatePersistentState(filepath.Join(tmpDir, "persistent_state.yaml"), zap.NewNop())
 	require.NoError(t, err)
 
-	pm, err := newPackageManager(agentFile, storageDir, "v0.110.0", ps, nil, sigVerifier)
+	pm, err := newPackageManager(agentFile, storageDir, "v0.110.0", defaultAgentExePathInArchieve, ps, nil, sigVerifier)
 	require.NoError(t, err)
 
 	return pm
